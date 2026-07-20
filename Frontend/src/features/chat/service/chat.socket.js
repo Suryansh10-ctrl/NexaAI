@@ -1,7 +1,7 @@
 import {io}  from "socket.io-client"
 
 export const initialzeSocketConnection = () => {
-    const socket = io("http://localhost:3000", {
+    const socket = io("https://nexaai-mb5t.onrender.com", {
         withCredentials: true,
     })
 
