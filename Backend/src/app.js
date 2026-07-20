@@ -25,11 +25,6 @@ app.use(cors({
 app.use("/api/auth", authRouter);
 app.use("/api/chats", chatRouter)
 
-app.use(
-    "/uploads",
-    express.static(path.join(process.cwd(), "uploads"))
-);
-
 app.use(express.static(path.join(__dirname, '../public')))
 
 app.get(/.*/, (req, res) => {
