@@ -30,4 +30,10 @@ app.use(
     express.static(path.join(process.cwd(), "uploads"))
 );
 
+app.use(express.static(path.join(__dirname, '../public')))
+
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'))
+})
+
 export default app;
