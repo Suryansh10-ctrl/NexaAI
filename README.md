@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 NexaAI
+# NexaAI
 
 ### An AI-powered conversational assistant inspired by ChatGPT & Perplexity
 
