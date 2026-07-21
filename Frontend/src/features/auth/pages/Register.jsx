@@ -35,8 +35,8 @@ const Register = () => {
       setIsSubmitting(true);
 
       await handleRegister(
-        registerData.email,
         registerData.name,
+        registerData.email,
         registerData.password
       );
 
