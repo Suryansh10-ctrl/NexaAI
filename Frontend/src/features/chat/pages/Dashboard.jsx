@@ -1,4 +1,4 @@
-import React, { useEffect,useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useChat } from "../hooks/useChat";
 import WelcomeScreen from "./WelcomeScreen";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import {
     PanelLeftClose,
+    PanelLeftOpen,
     SquarePen,
     Search,
     Library,
@@ -42,12 +43,12 @@ const Dashboard = () => {
     } = useChat();
 
     const navigate = useNavigate();
-    const {handleLogout} = useAuth();
+    const { handleLogout } = useAuth();
     const fileInputRef = useRef(null);
     const [selectedFile, setSelectedFile] = useState(null);
 
     const [chatInput, setchatInput] = useState("");
-    const [isSidebarOpen,setisSidebarOpen] = useState(true)
+    const [isSidebarOpen, setisSidebarOpen] = useState(false)
     const [search, setSearch] = useState("");
 
     const { user } = useSelector((state) => state.auth);
@@ -55,35 +56,35 @@ const Dashboard = () => {
     const currentChatId = useSelector((state) => state.chat.currentChatId);
 
     const filteredChats = Object.values(chats)
-    .sort(
-        (a,b)=>
-            new Date(b.lastUpdated)-new Date(a.lastUpdated)
-    )
-    .filter(chat =>
-        chat.title.toLowerCase().includes(search.toLowerCase())
-    );
+        .sort(
+            (a, b) =>
+                new Date(b.lastUpdated) - new Date(a.lastUpdated)
+        )
+        .filter(chat =>
+            chat.title.toLowerCase().includes(search.toLowerCase())
+        );
 
     const currentMessage =
-    chats[currentChatId]?.messages || [];
+        chats[currentChatId]?.messages || [];
 
     const showWelcomeScreen =
-    !currentChatId || currentMessage.length === 0;
+        !currentChatId || currentMessage.length === 0;
     const messagesEndRef = useRef(null);
     const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
-        behavior: "smooth",
+        messagesEndRef.current?.scrollIntoView({
+            behavior: "smooth",
         });
     };
     const SearchRef = useRef(null);
-    
+
 
     const chatContainerRef = useRef(null);
     const currentMessages = chats[currentChatId]?.messages || [];
     useEffect(() => {
-    requestAnimationFrame(() => {
-        messagesEndRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "end",
+        requestAnimationFrame(() => {
+            messagesEndRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "end",
             });
         });
     }, [currentMessages]);
@@ -94,85 +95,113 @@ const Dashboard = () => {
     }, []);
 
     const handleSubmitMessage = async (
-    e,
-    file = selectedFile,
-    clearFile = null
-) => {
-    e.preventDefault();
+        e,
+        file = selectedFile,
+        clearFile = null
+    ) => {
+        e.preventDefault();
 
-    if (!chatInput.trim() && !file) return;
+        if (!chatInput.trim() && !file) return;
 
-    try {
-        await handleSendMessages({
-            message: chatInput,
-            chatId: currentChatId,
-            file,
-        });
+        try {
+            await handleSendMessages({
+                message: chatInput,
+                chatId: currentChatId,
+                file,
+            });
 
-        setchatInput("");
-        setSelectedFile(null);
+            setchatInput("");
+            setSelectedFile(null);
 
-        if (clearFile) {
-            clearFile(null);
+            if (clearFile) {
+                clearFile(null);
+            }
+
+        } catch (err) {
+            console.log(err);
         }
-
-    } catch (err) {
-        console.log(err);
-    }
-};
+    };
     const openChat = (chatId) => {
         handleopenChat(chatId)
+        if (window.innerWidth < 1024) {
+            setisSidebarOpen(false);
+        }
     }
 
-    useEffect(()=>{
-        const handler=(e)=>{
-                if(e.ctrlKey && e.key==="k"){
-                    e.preventDefault();
-                    SearchRef.current.focus();
-                }
+    useEffect(() => {
+        const handler = (e) => {
+            if (e.ctrlKey && e.key === "k") {
+                e.preventDefault();
+                SearchRef.current.focus();
             }
-            window.addEventListener("keydown",handler);
-            return ()=>window.removeEventListener("keydown",handler);
-        },[]);
+        }
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+    }, []);
 
-        
 
-        const handleFile = (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            setSelectedFile(file);
-            console.log(file);
-        };
+
+    const handleFile = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        setSelectedFile(file);
+        console.log(file);
+    };
 
     return (
         <main className="h-screen bg-[#212121] flex overflow-hidden">
-            {/* ================= Sidebar ================= */}
+            {isSidebarOpen && (
+                <div
+                    onClick={() => setisSidebarOpen(false)}
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                />
+            )}
 
+            {/* side bar */}
             <aside
-                className={`bg-[#171717] border-r border-zinc-800 flex flex-col text-zinc-300 transition-all duration-300 overflow-hidden ${
-                    isSidebarOpen ? "w-72" : "w-20"
-                }`}
->
+                className={`
+                        fixed lg:static
+                        top-0 left-0
+                        h-screen
+                        z-50
+                        bg-[#171717]
+                        border-r border-zinc-800
+                        flex flex-col
+                        transition-all duration-300
+                        ${isSidebarOpen
+                        ? "translate-x-0 w-72"
+                        : "-translate-x-full lg:translate-x-0 lg:w-20"
+                    }
+                    `}
+            >
                 {/* Header */}
 
                 <div className="p-4 flex items-center justify-between">
-                 
-                {isSidebarOpen &&
-                    <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-zinc-70 ml-4 flex items-center justify-center shrink-0 cursor-pointer">
-                        <h1 className="font-serif text-xl">NexaAI</h1>
-                    </div>
-                </div>}
 
-                    <button 
-                    onClick={() => setisSidebarOpen(!isSidebarOpen)}
-                    className="p-2 rounded-lg hover:bg-zinc-800 transition cursor-pointer">
-                        <PanelLeftClose size={20} 
-                            className={`transition-transform duration-300 ${isSidebarOpen ? "rotate-180" : ""}`}
+                    {isSidebarOpen &&
+                        <div className="flex items-center gap-3">
+                            {/* <button
+                                onClick={() => setisSidebarOpen(true)}
+                                className="lg:hidden text-white"
+                            >
+                                <PanelLeftOpen size={22}/>
+                            </button> */}
+
+                            <h1 className="text-lg lg:text-xl text-gray-300 font-serif">
+                                NexaAI
+                            </h1>
+                        </div>
+                    }
+
+                    <button
+                        onClick={() => setisSidebarOpen(!isSidebarOpen)}
+                        className="p-2 rounded-lg hover:bg-zinc-800 transition cursor-pointer">
+                        <PanelLeftClose size={20}
+                            className={`transition-transform duration-300 text-white ${isSidebarOpen ? "rotate-180" : ""}`}
                         />
                     </button>
 
-                    
+
                 </div>
 
                 {/* Navigation */}
@@ -189,7 +218,7 @@ const Dashboard = () => {
                             <input
                                 ref={SearchRef}
                                 value={search}
-                                onChange={(e)=>setSearch(e.target.value)}
+                                onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search chats..."
                                 className="
                                 flex-1
@@ -204,29 +233,32 @@ const Dashboard = () => {
 
                         )}
 
-                </div>
+                    </div>
 
-                {filteredChats.length === 0 && (
+                    {filteredChats.length === 0 && (
 
-                <div className="text-center mt-10 text-zinc-500">
+                        <div className="text-center mt-10 text-zinc-500">
 
-                    No chats found
+                            No chats found
 
-                </div>
+                        </div>
 
-            )}
+                    )}
 
 
-                  <button onClick={(() => {
-                    handleNewChat()
-                    setchatInput("")
-                })} 
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-zinc-800 transition cursor-pointer">
+                    <button onClick={(() => {
+                        handleNewChat()
+                        if (window.innerWidth < 1024) {
+                            setisSidebarOpen(false)
+                        }
+                        setchatInput("")
+                    })}
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-zinc-800 transition text-white cursor-pointer">
                         <SquarePen size={18} />
                         {isSidebarOpen && <span>New Chat</span>}
                     </button>
 
-                    <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-zinc-800 transition cursor-pointer">
+                    <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-zinc-800 transition text-white cursor-pointer">
                         <Library size={18} />
                         {isSidebarOpen && <span>Library</span>}
                     </button>
@@ -242,7 +274,7 @@ const Dashboard = () => {
 
                     <div className="space-y-1">
                         {filteredChats.map((chat, index) => (
-                            
+
 
                             <button
                                 onClick={() => openChat(chat.chatId)}
@@ -257,11 +289,10 @@ const Dashboard = () => {
                                 rounded-lg
                                 transition
 
-                                ${
-                                    currentChatId === chat.chatId
+                                ${currentChatId === chat.chatId
                                         ? "bg-zinc-800 text-white"
                                         : "hover:bg-zinc-800 text-zinc-300"
-                                }
+                                    }
 
                             `}
                             >
@@ -273,7 +304,7 @@ const Dashboard = () => {
 
                 {/* Bottom */}
                 <div className="border-t border-zinc-800 p-3 space-y-2">
-                    
+
 
                     <button
                         className={`
@@ -285,11 +316,10 @@ const Dashboard = () => {
                             transition
                             cursor-pointer
                             hover:bg-zinc-800
-                            ${
-                            isSidebarOpen
+                            ${isSidebarOpen
                                 ? "gap-3 px-3 justify-start"
                                 : "justify-center"
-                        }`}
+                            }`}
                     >
                         <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center shrink-0">
                             <span className="text-lg font-semibold text-white">
@@ -324,10 +354,9 @@ const Dashboard = () => {
                             text-white
                             transition
                             hover:text-red-400
-                            ${
-                                isSidebarOpen
-                                    ? "gap-3 px-4.75 justify-start"
-                                    : "justify-center"
+                            ${isSidebarOpen
+                                ? "gap-3 px-4.75 justify-start"
+                                : "justify-center"
                             }
                         `}
                     >
@@ -347,8 +376,13 @@ const Dashboard = () => {
             <section className="flex-1 flex flex-col bg-[#171717]">
 
                 {/* Header */}
-
-                <header className="h-16 border-b border-zinc-800 flex items-center justify-between px-6">
+                <header className="h-16 border-b border-zinc-800 flex items-center justify-between px-4 lg:px-6">
+                    <button
+                        onClick={() => setisSidebarOpen(true)}
+                        className="lg:hidden text-white"
+                    >
+                        <PanelLeftOpen size={22} />
+                    </button>
                     <h1 className="text-xl text-gray-300 font-serif hover:text-gray-500 transition cursor-pointer">
                         NexaAI
                     </h1>
@@ -361,6 +395,7 @@ const Dashboard = () => {
                         chatInput={chatInput}
                         setchatInput={setchatInput}
                         handleSubmitMessage={handleSubmitMessage}
+                        isSidebarOpen={isSidebarOpen}
                     />
 
                 ) : (
@@ -369,7 +404,7 @@ const Dashboard = () => {
                         {/* Messages */}
 
                         <div
-                            className="messages flex-1 overflow-y-auto px-6 py-8"
+                            className="messages flex-1 overflow-y-auto px-3 md:px-6 py-5 md:py-8"
                         >
                             <div className="max-w-4xl mx-auto space-y-6">
 
@@ -377,18 +412,17 @@ const Dashboard = () => {
 
                                     <div
                                         key={message._id || index}
-                                        className={`flex ${
-                                            message.role === "user"
+                                        className={`flex ${message.role === "user"
                                                 ? "justify-end"
                                                 : "justify-start"
-                                        }`}
+                                            }`}
                                     >
 
                                         {/* AI Avatar */}
 
                                         {message.role === "assistant" && (
 
-                                            <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center font-bold mr-3 shrink-0">
+                                            <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center font-semibold mr-3 shrink-0">
 
                                                 AI
 
@@ -399,11 +433,10 @@ const Dashboard = () => {
                                         {/* Bubble */}
 
                                         <div
-                                            className={`max-w-[85%] w-fit rounded-3xl px-3 py-3 overflow-hidden shadow-lg ${
-                                                message.role === "user"
+                                            className={`max-w-[95%] sm:max-w-[80%] md:max-w-[80%] w-fit rounded-xl px-3 py-3 overflow-hidden shadow-lg ${message.role === "user"
                                                     ? "bg-[#232222] text-white rounded-br-md border border-gray-700"
                                                     : "bg-[#232222] text-white rounded-bl-md border border-gray-700"
-                                            }`}
+                                                }`}
                                         >
 
                                             {message.loading ? (
@@ -415,7 +448,7 @@ const Dashboard = () => {
                                                         <div className="w-2 h-2 rounded-full bg-white animate-bounce delay-150"></div>
                                                         <div className="w-2 h-2 rounded-full bg-white animate-bounce delay-300"></div>
                                                     </div>
-                                                    
+
                                                 </div>
 
                                             ) : (
@@ -448,7 +481,7 @@ const Dashboard = () => {
 
                                                         prose-code:text-green-400
                                                     "
-                                                    >   
+                                                >
 
                                                     {message.file && (
                                                         <a
@@ -475,10 +508,10 @@ const Dashboard = () => {
                                                         </a>
                                                     )}
 
-                                                        <MarkdownRenderer >
-                                                            {message.content}
-                                                        </MarkdownRenderer>
-                                                    </article>
+                                                    <MarkdownRenderer >
+                                                        {message.content}
+                                                    </MarkdownRenderer>
+                                                </article>
 
                                             )}
 
@@ -488,7 +521,7 @@ const Dashboard = () => {
 
                                         {message.role === "user" && (
 
-                                            <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center font-bold ml-3 shrink-0">
+                                            <div className="w-8 h-8 md:w-8 md:h-8 rounded-full bg-zinc-700 flex items-center justify-center font-bold ml-3 shrink-0">
 
                                                 U
 
@@ -508,7 +541,7 @@ const Dashboard = () => {
 
                         {/* Bottom Input */}
 
-                        <div className="px-6 pb-5">
+                        <div className="px-2 sm:px-4 lg:px-6 pb-4">
 
                             {selectedFile && (
                                 <div className="w-full max-w-4xl mx-auto mb-3 bg-[#2b2b2b] border border-zinc-700 rounded-2xl px-4 py-3 flex items-center justify-between">
@@ -540,11 +573,11 @@ const Dashboard = () => {
 
                             <form
                                 onSubmit={handleSubmitMessage}
-                                onDragOver={(e => {e.preventDefault()})}
+                                onDragOver={(e => { e.preventDefault() })}
                                 onDrop={(e) => {
                                     e.preventDefault();
 
-                                    if(e.dataTransfer.files.length > 0){
+                                    if (e.dataTransfer.files.length > 0) {
                                         setSelectedFile(e.dataTransfer.files[0]);
                                     }
                                 }}
@@ -555,9 +588,8 @@ const Dashboard = () => {
                                 bg-[#2b2b2b]
                                 border
                                 border-zinc-700
-                                rounded-full
-                                px-4
-                                py-2
+                                rounded-2xl md:rounded-full
+                                px-3 md:px-4 py-2
                                 flex
                                 items-center
                                 "
@@ -566,7 +598,7 @@ const Dashboard = () => {
                                 {/* Hidden file input */}
                                 <input
                                     type="file"
-                                    style={{display: "none"}}
+                                    style={{ display: "none" }}
                                     ref={fileInputRef}
                                     onChange={handleFile}
                                 />
@@ -577,7 +609,7 @@ const Dashboard = () => {
                                     onClick={() => fileInputRef.current.click()}
                                     className="text-zinc-400 hover:text-white"
                                 >
-                                    <Plus size={20} />
+                                    <Plus className="w-5 h-5 md:w-6 md:h-6" />
                                 </button>
 
                                 {/* Chat input */}
@@ -586,13 +618,14 @@ const Dashboard = () => {
                                     onChange={(e) => setchatInput(e.target.value)}
                                     placeholder="Ask anything..."
                                     className="
-                                    flex-1
-                                    bg-transparent
-                                    outline-none
-                                    px-4
-                                    text-white
-                                    placeholder:text-zinc-500
-                                    "
+                                        flex-1
+                                        bg-transparent
+                                        outline-none
+                                        px-2 md:px-4
+                                        text-sm md:text-base
+                                        text-white
+                                        placeholder:text-zinc-500
+                                        "
                                 />
 
                                 {/* Mic button */}
@@ -615,7 +648,7 @@ const Dashboard = () => {
                                     transition
                                     "
                                 >
-                                    <ArrowUp size={16} />
+                                    <ArrowUp className="w-4 h-4 md:w-5 md:h-5" />
                                 </button>
 
                             </form>
