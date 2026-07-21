@@ -8,7 +8,7 @@
 Modern • Fast • Intelligent • Real-Time
 </p>
 
-<img src="./Frontend/public/logo.svg" alt="NexaAI Logo" width="120"/>
+
 
 </div>
 
