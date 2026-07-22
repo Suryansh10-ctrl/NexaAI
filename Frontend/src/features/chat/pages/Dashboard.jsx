@@ -48,7 +48,9 @@ const Dashboard = () => {
     const [selectedFile, setSelectedFile] = useState(null);
 
     const [chatInput, setchatInput] = useState("");
-    const [isSidebarOpen, setisSidebarOpen] = useState(false)
+    const [isSidebarOpen, setisSidebarOpen] = useState(() => {
+        window.innerWidth >= 1024
+    })
     const [search, setSearch] = useState("");
 
     const { user } = useSelector((state) => state.auth);
@@ -160,23 +162,27 @@ const Dashboard = () => {
             {/* side bar */}
             <aside
                 className={`
-                        fixed lg:static
-                        top-0 left-0
-                        h-screen
-                        z-50
-                        bg-[#171717]
-                        border-r border-zinc-800
-                        flex flex-col
-                        transition-all duration-300
-                        ${isSidebarOpen
+                    fixed lg:static
+                    inset-y-0 left-0
+                    h-dvh
+                    z-50
+                    bg-[#171717]
+                    border-r border-zinc-800
+                    flex flex-col
+                    transition-all duration-300
+                    overflow-hidden
+
+                    ${
+                    isSidebarOpen
                         ? "translate-x-0 w-[280px] max-w-[85vw]"
                         : "-translate-x-full lg:translate-x-0 lg:w-20"
                     }
-                    `}
-            >
+                `}
+                >
+
                 {/* Header */}
 
-                <div className="p-4 flex items-center justify-between">
+                <div className="p-4 flex items-center justify-between shrink-0">
 
                     {isSidebarOpen &&
                         <div className="flex items-center gap-3">
@@ -267,7 +273,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Recent Chats */}
-                <div className="flex-1 overflow-y-auto px-3 mt-6">
+                <div className="flex-1 min-h-0 overflow-y-auto px-3 mt-6">
                     {isSidebarOpen && <p className="text-xs uppercase text-zinc-500 px-3 mb-3">
                         Recent Chats
                     </p>}
@@ -303,7 +309,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Bottom */}
-                <div className="border-t border-zinc-800 p-3 space-y-2">
+                <div className="mt-auto border-t border-zinc-800 p-3 space-y-2 shrink-0 bg-[#171717]">
 
 
                     <button
