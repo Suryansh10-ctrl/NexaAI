@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+*{
+    box-sizing: border-box;
+}
+
+body,
+html,#root{
+    width: 100%;
+    overflow-x: hidden;
+}
+
 .messages::-webkit-scrollbar{
     display: none;
 }

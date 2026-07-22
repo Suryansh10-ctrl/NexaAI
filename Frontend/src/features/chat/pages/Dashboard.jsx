@@ -149,7 +149,7 @@ const Dashboard = () => {
     };
 
     return (
-        <main className="h-screen w-full bg-[#212121] flex overflow-hidden">
+        <main className="h-dvh w-full bg-[#212121] flex overflow-hidden">
             {isSidebarOpen && (
                 <div
                     onClick={() => setisSidebarOpen(false)}
@@ -158,22 +158,29 @@ const Dashboard = () => {
             )}
 
             {/* side bar */}
-            <aside
-                className={`
-                        fixed lg:static
-                        top-0 left-0
-                        h-screen
-                        z-50
-                        bg-[#171717]
-                        border-r border-zinc-800
-                        flex flex-col
-                        transition-all duration-300
-                        ${isSidebarOpen
-                        ? "translate-x-0 w-[280px] max-w-[85vw]"
-                        : "-translate-x-full lg:translate-x-0 lg:w-20"
-                    }
-                    `}
+           <aside
+            className={`
+            fixed
+            top-0
+            left-0
+            z-50
+            h-dvh
+            w-72
+            bg-[#171717]
+            border-r
+            border-zinc-800
+            transform
+            transition-transform
+            duration-300
+
+            ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+
+            lg:static
+            lg:translate-x-0
+            lg:w-20
+            `}
             >
+
                 {/* Header */}
 
                 <div className="p-4 flex items-center justify-between">
@@ -373,7 +380,7 @@ const Dashboard = () => {
 
             {/* ================= Chat Area ================= */}
 
-            <section className="flex-1 min-w-0 flex flex-col bg-[#171717]">
+            <section className="flex-1 min-w-0 flex flex-col overflow-hidden bg-[#171717]">
 
                 {/* Header */}
                 <header className="h-16 border-b border-zinc-800 flex items-center justify-between px-3 sm:px-5">
@@ -404,7 +411,7 @@ const Dashboard = () => {
                         {/* Messages */}
 
                         <div
-                            className="messages flex-1 overflow-y-auto px-3 sm:px-5 py-4 "
+                            className="messages flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-5 py-4 "
                         >
                             <div className="max-w-4xl mx-auto space-y-6">
 
@@ -433,7 +440,7 @@ const Dashboard = () => {
                                         {/* Bubble */}
 
                                         <div
-                                            className={`max-w[calc(100%-48px)] sm:max-w-[80%] md:max-w-[80%] w-fit rounded-xl px-3 py-3 overflow-hidden shadow-lg ${message.role === "user"
+                                            className={`max-w[calc(100%-48px)] sm:max-w-[75%] md:max-w-[80%] w-fit rounded-xl px-3 py-3 overflow-hidden shadow-lg ${message.role === "user"
                                                     ? "bg-[#232222] text-white rounded-br-md border border-gray-700"
                                                     : "bg-[#232222] text-white rounded-bl-md border border-gray-700"
                                                 }`}
