@@ -590,8 +590,10 @@ const Dashboard = () => {
                                 border-zinc-700
                                 rounded-2xl md:rounded-full
                                 px-3 md:px-4 py-2
+                                mb-3
                                 flex
                                 items-center
+                                overflow-hidden
                                 "
                             >
 

@@ -165,8 +165,10 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                                 border-zinc-700\r
                                 rounded-2xl md:rounded-full\r
                                 px-3 md:px-4 py-2\r
+                                mb-3\r
                                 flex\r
                                 items-center\r
+                                overflow-hidden\r
                                 `,children:[(0,K.jsx)(`input`,{type:`file`,style:{display:`none`},ref:u,onChange:e=>{let t=e.target.files[0];t&&(f(t),console.log(t))}}),(0,K.jsx)(`button`,{type:`button`,onClick:()=>u.current.click(),className:`text-zinc-400 hover:text-white`,children:(0,K.jsx)(wa,{className:`w-5 h-5 md:w-6 md:h-6`})}),(0,K.jsx)(`input`,{value:p,onChange:e=>m(e.target.value),placeholder:`Ask anything...`,className:`\r
                                         flex-1\r
                                         bg-transparent\r
