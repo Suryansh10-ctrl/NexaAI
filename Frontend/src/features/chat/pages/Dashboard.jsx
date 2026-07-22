@@ -158,29 +158,22 @@ const Dashboard = () => {
             )}
 
             {/* side bar */}
-           <aside
-            className={`
-            fixed
-            top-0
-            left-0
-            z-50
-            h-dvh
-            w-72
-            bg-[#171717]
-            border-r
-            border-zinc-800
-            transform
-            transition-transform
-            duration-300
-
-            ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-
-            lg:static
-            lg:translate-x-0
-            lg:w-20
-            `}
+            <aside
+                className={`
+                        fixed lg:static
+                        top-0 left-0
+                        h-screen
+                        z-50
+                        bg-[#171717]
+                        border-r border-zinc-800
+                        flex flex-col
+                        transition-all duration-300
+                        ${isSidebarOpen
+                        ? "translate-x-0 w-[280px] max-w-[85vw]"
+                        : "-translate-x-full lg:translate-x-0 lg:w-20"
+                    }
+                    `}
             >
-
                 {/* Header */}
 
                 <div className="p-4 flex items-center justify-between">
