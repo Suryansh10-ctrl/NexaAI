@@ -149,7 +149,7 @@ const Dashboard = () => {
     };
 
     return (
-        <main className="h-screen bg-[#212121] flex overflow-hidden">
+        <main className="h-screen w-full bg-[#212121] flex overflow-hidden">
             {isSidebarOpen && (
                 <div
                     onClick={() => setisSidebarOpen(false)}
@@ -169,7 +169,7 @@ const Dashboard = () => {
                         flex flex-col
                         transition-all duration-300
                         ${isSidebarOpen
-                        ? "translate-x-0 w-72"
+                        ? "translate-x-0 w-[280px] max-w-[85vw]"
                         : "-translate-x-full lg:translate-x-0 lg:w-20"
                     }
                     `}
@@ -373,10 +373,10 @@ const Dashboard = () => {
 
             {/* ================= Chat Area ================= */}
 
-            <section className="flex-1 flex flex-col bg-[#171717]">
+            <section className="flex-1 min-w-0 flex flex-col bg-[#171717]">
 
                 {/* Header */}
-                <header className="h-16 border-b border-zinc-800 flex items-center justify-between px-4 lg:px-6">
+                <header className="h-16 border-b border-zinc-800 flex items-center justify-between px-3 sm:px-5">
                     <button
                         onClick={() => setisSidebarOpen(true)}
                         className="lg:hidden text-white"
@@ -404,18 +404,18 @@ const Dashboard = () => {
                         {/* Messages */}
 
                         <div
-                            className="messages flex-1 overflow-y-auto px-3 md:px-6 py-5 md:py-8"
+                            className="messages flex-1 overflow-y-auto px-3 sm:px-5 py-4 "
                         >
                             <div className="max-w-4xl mx-auto space-y-6">
 
                                 {currentMessages.map((message, index) => (
 
                                     <div
-                                        key={message._id || index}
-                                        className={`flex ${message.role === "user"
-                                                ? "justify-end"
-                                                : "justify-start"
-                                            }`}
+                                    className={`flex items-start gap-2 ${
+                                    message.role==="user"
+                                    ? "justify-end"
+                                    : "justify-start"
+                                    }`}
                                     >
 
                                         {/* AI Avatar */}
@@ -433,7 +433,7 @@ const Dashboard = () => {
                                         {/* Bubble */}
 
                                         <div
-                                            className={`max-w-[95%] sm:max-w-[80%] md:max-w-[80%] w-fit rounded-xl px-3 py-3 overflow-hidden shadow-lg ${message.role === "user"
+                                            className={`max-w[calc(100%-48px)] sm:max-w-[80%] md:max-w-[80%] w-fit rounded-xl px-3 py-3 overflow-hidden shadow-lg ${message.role === "user"
                                                     ? "bg-[#232222] text-white rounded-br-md border border-gray-700"
                                                     : "bg-[#232222] text-white rounded-bl-md border border-gray-700"
                                                 }`}
@@ -480,6 +480,17 @@ const Dashboard = () => {
                                                         prose-pre:border-zinc-700
 
                                                         prose-code:text-green-400
+
+                                                        break-words
+                                                        overflow-hidden
+
+                                                        prose-pre:overflow-x-auto
+                                                        prose-pre:max-w-full
+
+                                                        prose-code:break-all
+
+                                                        prose-table:block
+                                                        prose-table:overflow-x-auto
                                                     "
                                                 >
 
@@ -588,9 +599,8 @@ const Dashboard = () => {
                                 bg-[#2b2b2b]
                                 border
                                 border-zinc-700
-                                rounded-2xl md:rounded-full
-                                px-3 md:px-4 py-2
-                                mb-3
+                                rounded-full
+                                px-2 md:px-4 py-2
                                 flex
                                 items-center
                                 overflow-hidden
@@ -621,9 +631,10 @@ const Dashboard = () => {
                                     placeholder="Ask anything..."
                                     className="
                                         flex-1
+                                        min-w-0
                                         bg-transparent
                                         outline-none
-                                        px-2 md:px-4
+                                        px-3 md:px-4
                                         text-sm md:text-base
                                         text-white
                                         placeholder:text-zinc-500
