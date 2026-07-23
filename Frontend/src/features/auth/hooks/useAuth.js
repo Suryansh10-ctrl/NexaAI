@@ -16,6 +16,7 @@ export function useAuth(){
             name,
             email,
             password,
+            avatar: "",
         });
 
         dispatch(setUser(data.user));

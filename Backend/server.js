@@ -1,5 +1,6 @@
 import dotenv from "dotenv"
 dotenv.config()
+
 import dns from "dns"
 dns.setServers(["8.8.8.8"]);
 

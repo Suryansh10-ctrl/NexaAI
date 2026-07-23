@@ -4,6 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import Google from '../../../assets/google_logo.png'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -132,6 +133,15 @@ const Login = () => {
             className="w-full rounded-lg bg-[#00ACEA] py-3 text-sm font-medium text-white transition hover:bg-[#0095CC] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSubmitting ? "Logging in..." : "Login"}
+          </button>
+
+          <button onClick={()=>{
+            window.open("http://localhost:3000/api/google/google", "_self")
+          }} variant='outline' 
+          className="w-full flex justify-center gap-5 items-center rounded-lg border border-[#3A3533] bg-[#201D1C] px-4 py-3 text-sm text-[#ECE9E4] placeholder:text-[#75706C] outline-none transition focus:border-[#00ACEA] hover: hover:text-[#00ACEA] hover:border-[#00ACEA]"
+          >
+            <img src={Google} className="w-5" alt="" />
+            Login with google
           </button>
 
         </form>

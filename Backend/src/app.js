@@ -4,8 +4,10 @@ import { fileURLToPath } from "url";
 
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import "./google_auth/passport.js"
 import morgan from "morgan";
 
+import googleRouter from "./routes/google.route.js";
 import authRouter from "./routes/auth.route.js";
 import chatRouter from "./routes/chat.router.js";
 
@@ -29,6 +31,7 @@ app.use(
 
 app.use(morgan("dev"));
 
+app.use("/api/google", googleRouter)
 app.use("/api/auth", authRouter);
 app.use("/api/chats", chatRouter);
 
