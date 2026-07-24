@@ -136,7 +136,10 @@ const Login = () => {
           </button>
 
           <button onClick={()=>{
-            window.open("http://localhost:3000/api/google/google", "_self")
+            window.open(
+            "https://nexaai-mb5t.onrender.com/api/google/google",
+            "_self"
+          );
           }} variant='outline' 
           className="w-full flex justify-center gap-5 items-center rounded-lg border border-[#3A3533] bg-[#201D1C] px-4 py-3 text-sm text-[#ECE9E4] placeholder:text-[#75706C] outline-none transition focus:border-[#00ACEA] hover: hover:text-[#00ACEA] hover:border-[#00ACEA]"
           >

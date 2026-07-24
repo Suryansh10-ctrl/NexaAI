@@ -24,6 +24,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "https://nexaai-mb5t.onrender.com",
     ],
     credentials: true,
   })

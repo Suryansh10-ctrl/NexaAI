@@ -327,10 +327,18 @@ const Dashboard = () => {
                                 : "justify-center"
                             }`}
                     >
-                        <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center shrink-0">
-                            <span className="text-lg font-semibold text-white">
-                                <img className="border border-gray-500 rounded-full" src={user?.avatar} alt={user?.name} />
-                            </span>
+                        <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center overflow-hidden shrink-0">
+                        {user?.avatar ? (
+                            <img
+                            src={user.avatar}
+                            alt={user?.name}
+                            className="w-full h-full object-cover"
+                            />
+                            ) : (
+                                <span className="text-lg font-semibold text-white">
+                                {user?.name?.charAt(0).toUpperCase()}
+                                </span>
+                            )}
                         </div>
 
                         {isSidebarOpen && (
